@@ -6,9 +6,11 @@ from threading import Thread
 # ---ПУГАМЕ НАЛАШТУВАННЯ ---
 WIDTH, HEIGHT = 800, 600
 init()
+mixer.init()
 screen = display.set_mode((WIDTH, HEIGHT))
 clock = time.Clock()
 display.set_caption("Пінг-Понг")
+
 # ---СЕРВЕР ---
 def connect_to_server():
     while True:
@@ -38,12 +40,13 @@ def receive():
             break
 
 # --- ШРИФТИ ---
-font_win = font.Font(None, 72)
-font_main = font.Font(None, 36)
+font_win = font.Font("RubikMonoOne-Regular.ttf", 72)
+font_main = font.Font("PermanentMarker-Regular.ttf", 36)
 # --- ЗОБРАЖЕННЯ ----
-
+backgr_img = image.load(r"img\b.png")
+backgr_img = transform.scale(backgr_img, (WIDTH, HEIGHT))
 # --- ЗВУКИ ---
-
+sound_wall_hit = mixer.Sound("classic-punch-impact-352711.mp3")
 # --- ГРА ---
 game_over = False
 winner = None
@@ -72,9 +75,9 @@ while True:
                 you_winner = False
 
         if you_winner:
-            text = "Ти переміг!"
+            text = "You won!"
         else:
-            text = "Пощастить наступним разом!"
+            text = "Better luck next time!"
 
         win_text = font_win.render(text, True, (255, 215, 0))
         text_rect = win_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
@@ -88,7 +91,8 @@ while True:
         continue  # Блокує гру після перемоги
 
     if game_state:
-        screen.fill((30, 30, 30))
+        #screen.fill((30, 30, 30))
+        screen.blit(backgr_img, (0,0))
         draw.rect(screen, (0, 255, 0), (20, game_state['paddles']['0'], 20, 100))
         draw.rect(screen, (255, 0, 255), (WIDTH - 40, game_state['paddles']['1'], 20, 100))
         draw.circle(screen, (255, 255, 255), (game_state['ball']['x'], game_state['ball']['y']), 10)
@@ -98,13 +102,13 @@ while True:
         if game_state['sound_event']:
             if game_state['sound_event'] == 'wall_hit':
                 # звук відбиття м'ячика від стін
-                pass
+                sound_wall_hit.play(                        )
             if game_state['sound_event'] == 'platform_hit':
                 # звук відбиття м'ячика від платформи
                 pass
 
     else:
-        wating_text = font_main.render(f"Очікування гравців...", True, (255, 255, 255))
+        wating_text = font_main.render(f"waiting players...", True, (255, 255, 255))
         screen.blit(wating_text, (WIDTH // 2 - 25, 20))
 
     display.update()
