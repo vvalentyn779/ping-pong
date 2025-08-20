@@ -41,7 +41,7 @@
    * Клонуй репозиторій або завантаж ZIP:
 
      ```bash
-     git clone [встав сюди посилання на твій репозиторій]
+     git clone https://github.com/vvalentyn779/ping-pong/tree/master
      ```
 
 2. **Увімкни сервер**
